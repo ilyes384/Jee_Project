@@ -26,9 +26,7 @@ public class Filter1 extends HttpFilter implements Filter {
 	/**
 	 * @see Filter#destroy()
 	 */
-	public void destroy() {
-		// TODO Auto-generated method stub
-	}
+
 
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
@@ -43,7 +41,7 @@ public class Filter1 extends HttpFilter implements Filter {
            
             chain.doFilter(request, response);
         } else {
-            httpResponse.sendRedirect("index.html");
+            httpResponse.sendRedirect("login.jsp");
         }
   
 
@@ -54,8 +52,5 @@ public class Filter1 extends HttpFilter implements Filter {
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */
-	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
-	}
 
 }
