@@ -1,5 +1,6 @@
 package servlets;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -9,12 +10,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import models.Usermodel;
 import wrappers.Wrapper1;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import database_c.DatabaseConnection;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -57,32 +58,23 @@ public class Servlet1 extends HttpServlet {
 		
         String username = wrapperRequest.getParameter("username");
         String password = wrapperRequest.getParameter("password");
-        // Controle d'accés sur les sessions 
-        if ( check(username,password)) {
-          
-        	HttpSession session = wrapperRequest.getSession();
-            session.setAttribute("user", username);
-            response.sendRedirect("userData.jsp");
-        } else {
-            
-            response.sendRedirect("Login.jsp");
-        }
-	}
-	private boolean check (String username, String password) {
-	    try {
-	        
-	        String query = "SELECT * FROM utilisateur WHERE username = ? AND password = ?";
-	        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-	            preparedStatement.setString(1, username);
-	            preparedStatement.setString(2, password);
+     // Création l'objet UserModel
+        Usermodel userModel = new Usermodel();
+       
 
-	            ResultSet resultSet = preparedStatement.executeQuery();
-	            return resultSet.next(); 
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false; 
-	    }
-	
-	
-	}}
+        
+        boolean isAuthenticated = userModel.LogUser(username,password);
+        if (isAuthenticated) {
+            HttpSession session = request.getSession();
+            session.setAttribute("userModel", userModel);
+            session.setAttribute("isAuthenticated", true);
+        }
+      
+        request.setAttribute("userModel", userModel);
+        request.setAttribute("isAuthenticated", isAuthenticated);
+
+       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("userData.jsp");
+        dispatcher.forward(request, response);
+	}
+	}

@@ -19,7 +19,7 @@ public class Wrapper1  extends HttpServletRequestWrapper {
            
             return "ilyessmodif";
         }
-        // Si le paramètre n'est pas adéquat alors on retourne la valeur par défaut
+        
         return super.getParameter(name);
     }
 
